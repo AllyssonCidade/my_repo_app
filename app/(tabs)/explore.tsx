@@ -1,109 +1,131 @@
-import { StyleSheet, Image, Platform } from 'react-native';
-
-import { Collapsible } from '@/components/Collapsible';
-import { ExternalLink } from '@/components/ExternalLink';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-
+import { View, Button, Alert, TextInput, ScrollView } from "react-native";
+import { useState, useCallback } from "react";
+import { ThemedText } from "@/components/ThemedText";
+import { useStripe } from "@stripe/stripe-react-native";
+import { fetchPaymentSheetParams } from "@/api/api";
+import Sliders from "@/components/ui/slider";
+import { Avatar } from "@rneui/themed";
 export default function TabTwoScreen() {
+  const [price, setPrice] = useState<number>(50);
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
+  const [loading, setLoading] = useState(false);
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [phone, setPhone] = useState<string>("");
+
+  const initializePaymentSheet = useCallback(
+    async (price: number) => {
+      const { paymentIntent, ephemeralKey, customer } =
+        await fetchPaymentSheetParams(Math.floor(price), name, email, phone);
+
+      const { error } = await initPaymentSheet({
+        merchantDisplayName: "Allysson Cidade",
+        customerId: customer,
+        customerEphemeralKeySecret: ephemeralKey,
+        paymentIntentClientSecret: paymentIntent,
+        allowsDelayedPaymentMethods: true,
+        defaultBillingDetails: {
+          name: name,
+          email: email,
+          phone: phone,
+        },
+      });
+
+      if (!error) {
+        setLoading(true);
+      } else {
+        Alert.alert(`Error code: ${error.code}`, error.message);
+      }
+    },
+    [initPaymentSheet, name, email, phone]
+  );
+
+  const openPaymentSheet = async () => {
+    if (!name || !email || !phone) {
+      Alert.alert("Por favor, preencha todos os campos antes de continuar.");
+      return;
+    }
+    await initializePaymentSheet(price);
+    const { error } = await presentPaymentSheet();
+
+    if (error) {
+      Alert.alert(`Error code: ${error.code}`, error.message);
+    } else {
+      Alert.alert("Success", "Your order is confirmed!");
+      setLoading(false);
+      setName("");
+      setEmail("");
+      setPhone("");
+    }
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
+    <ScrollView
+      style={{
+        flex: 1,
+        gap: 26,
+        padding: 16,
+        marginTop: 50,
+      }}
+    >
+      <View style={{ alignItems: "center", marginBottom: 16 }}>
+        <Avatar
+          size={104}
+          rounded
+          source={{ uri: "https://github.com/AllyssonCidade.png" }}
+          title="Allysson Cidade"
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
+      </View>
+
+      <View style={{ width: "100%", gap: 8 }}>
+        <ThemedText style={{ fontSize: 20, textAlign: "center" }}>
+          Contribuir
         </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
+
+        <View>
+          <ThemedText>Nome:</ThemedText>
+          <TextInput
+            onChangeText={setName}
+            value={name}
+            style={{
+              backgroundColor: "#61606073",
+              borderRadius: 8,
+              color: "#f5f5f5",
+            }}
+          />
+        </View>
+        <View>
+          <ThemedText>E-mail:</ThemedText>
+          <TextInput
+            onChangeText={setEmail}
+            value={email}
+            style={{
+              backgroundColor: "#61606073",
+              borderRadius: 8,
+              color: "#f5f5f5",
+            }}
+          />
+        </View>
+        <View>
+          <ThemedText>Telefone:</ThemedText>
+          <TextInput
+            onChangeText={setPhone}
+            value={phone}
+            style={{
+              backgroundColor: "#61606073",
+              borderRadius: 8,
+              color: "#f5f5f5",
+            }}
+          />
+        </View>
+        <Sliders onVChange={setPrice} value={price} />
+        <ThemedText
+          style={{ color: "#f5f5f5", fontSize: 24, textAlign: "center" }}
+        >
+          R$ {Math.floor(price)},00
         </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image source={require('@/assets/images/react-logo.png')} style={{ alignSelf: 'center' }} />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText> to see how to load{' '}
-          <ThemedText style={{ fontFamily: 'SpaceMono' }}>
-            custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user's current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful <ThemedText type="defaultSemiBold">react-native-reanimated</ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+        <Button disabled={loading} title="Cartão" onPress={openPaymentSheet} />
+      </View>
+    </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
-  },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-});
