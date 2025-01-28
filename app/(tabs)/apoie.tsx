@@ -1,11 +1,13 @@
-import { View, Button, Alert, TextInput, ScrollView } from "react-native";
+import { View, Button, Alert, TextInput, useColorScheme } from "react-native";
 import { useState, useCallback } from "react";
 import { ThemedText } from "@/components/ThemedText";
 import { useStripe } from "@stripe/stripe-react-native";
 import { fetchPaymentSheetParams } from "@/api/api";
 import Sliders from "@/components/ui/slider";
-import { Avatar } from "@rneui/themed";
-export default function TabTwoScreen() {
+import { Colors } from "@/constants/Colors";
+
+export default function ApoieScreen() {
+  const colorScheme = useColorScheme();
   const [price, setPrice] = useState<number>(50);
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [loading, setLoading] = useState(false);
@@ -60,28 +62,20 @@ export default function TabTwoScreen() {
   };
 
   return (
-    <ScrollView
+    <View
       style={{
         flex: 1,
-        gap: 26,
-        padding: 16,
-        marginTop: 50,
+        justifyContent: "center",
+        paddingTop: 50,
+        backgroundColor: Colors[colorScheme ?? "light"].background,
       }}
     >
-      <View style={{ alignItems: "center", marginBottom: 16 }}>
-        <Avatar
-          size={104}
-          rounded
-          source={{ uri: "https://github.com/AllyssonCidade.png" }}
-          title="Allysson Cidade"
-        />
-      </View>
-
-      <View style={{ width: "100%", gap: 8 }}>
-        <ThemedText style={{ fontSize: 20, textAlign: "center" }}>
-          Contribuir
-        </ThemedText>
-
+      <ThemedText
+        style={{ fontSize: 24, textAlign: "center", fontWeight: "semibold" }}
+      >
+        Contribuir
+      </ThemedText>
+      <View style={{ paddingHorizontal: 16, gap: 12 }}>
         <View>
           <ThemedText>Nome:</ThemedText>
           <TextInput
@@ -90,7 +84,7 @@ export default function TabTwoScreen() {
             style={{
               backgroundColor: "#61606073",
               borderRadius: 8,
-              color: "#f5f5f5",
+              color: Colors[colorScheme!].text,
             }}
           />
         </View>
@@ -102,7 +96,7 @@ export default function TabTwoScreen() {
             style={{
               backgroundColor: "#61606073",
               borderRadius: 8,
-              color: "#f5f5f5",
+              color: Colors[colorScheme!].text,
             }}
           />
         </View>
@@ -114,18 +108,16 @@ export default function TabTwoScreen() {
             style={{
               backgroundColor: "#61606073",
               borderRadius: 8,
-              color: "#f5f5f5",
+              color: Colors[colorScheme!].text,
             }}
           />
         </View>
         <Sliders onVChange={setPrice} value={price} />
-        <ThemedText
-          style={{ color: "#f5f5f5", fontSize: 24, textAlign: "center" }}
-        >
+        <ThemedText style={{ fontSize: 24, textAlign: "center" }}>
           R$ {Math.floor(price)},00
         </ThemedText>
         <Button disabled={loading} title="Cartão" onPress={openPaymentSheet} />
       </View>
-    </ScrollView>
+    </View>
   );
 }

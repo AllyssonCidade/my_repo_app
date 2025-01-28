@@ -1,10 +1,4 @@
-import axios from "axios";
-const URL = process.env.EXPO_PUBLIC_HOST;
-const api = axios.create({
-  baseURL: URL,
-  timeout: 5000,
-});
-
+///// STRIPE ////
 export const fetchPaymentSheetParams = async (price, name, email, phone) => {
   const response = await fetch(
     `${process.env.EXPO_PUBLIC_HOST}/payment-sheet`,
