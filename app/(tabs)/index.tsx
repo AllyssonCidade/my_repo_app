@@ -1,11 +1,21 @@
-import { ScrollView, View } from "react-native";
+import {
+  ActivityIndicator,
+  Button,
+  FlatList,
+  Image,
+  Linking,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { ThemedText } from "@/components/ThemedText";
-import { Avatar, Divider } from "@rneui/themed";
+import { Avatar, Divider, Icon } from "@rneui/themed";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "react-native";
 import { getRepos, getUserData } from "@/api/github";
 import { useEffect, useState } from "react";
-import { Link } from "expo-router";
+import { darken } from "polished";
 
 export interface RepoTypes {
   name: string;
@@ -27,11 +37,13 @@ export default function HomeScreen() {
   const colorScheme = useColorScheme();
   const [repos, setRepos] = useState<RepoTypes[]>([]);
   const [user, setUser] = useState<UserTypes | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     const fetchData = async () => {
       const userData = await getUserData();
-      const reposData = await getRepos();
+      const reposData = await getRepos(page);
       setUser(userData);
       setRepos(reposData);
     };
@@ -39,11 +51,21 @@ export default function HomeScreen() {
     fetchData();
   }, []);
 
+  const handleLoadMore = async () => {
+    if (loading) return;
+    setLoading(true);
+    setPage((prevPage) => prevPage + 1);
+    const newRepos = await getRepos(page + 1);
+    setRepos((prevRepos) => [...prevRepos, ...newRepos]);
+    setLoading(false);
+  };
+
   return (
-    <ScrollView
+    <View
       style={{
         flex: 1,
         paddingTop: 50,
+        paddingBottom: 490,
         backgroundColor: Colors[colorScheme ?? "light"].background,
       }}
     >
@@ -61,7 +83,7 @@ export default function HomeScreen() {
           title="Allysson Cidade"
         />
         <View style={{ alignItems: "center", gap: 2 }}>
-          <ThemedText style={{ fontWeight: "bold", fontSize: 16 }}>
+          <ThemedText style={{ fontWeight: "bold", fontSize: 18 }}>
             {user?.name}
           </ThemedText>
           <ThemedText style={{ fontSize: 16 }}>
@@ -87,12 +109,13 @@ export default function HomeScreen() {
             flexDirection: "column",
             justifyContent: "space-between",
             alignItems: "center",
+            flexBasis: "30%",
           }}
         >
           <ThemedText style={{ fontWeight: "bold" }}>
             {user?.public_repos}
           </ThemedText>
-          <ThemedText style={{ fontWeight: "bold" }}>Repositorys</ThemedText>
+          <ThemedText style={{ fontWeight: "bold" }}>Repositórios</ThemedText>
         </View>
         <Divider
           style={{
@@ -107,12 +130,13 @@ export default function HomeScreen() {
             flexDirection: "column",
             justifyContent: "space-between",
             alignItems: "center",
+            flexBasis: "30%",
           }}
         >
           <ThemedText style={{ fontWeight: "bold" }}>
             {user?.followers}
           </ThemedText>
-          <ThemedText style={{ fontWeight: "bold" }}>Followers</ThemedText>
+          <ThemedText style={{ fontWeight: "bold" }}>Seguidores</ThemedText>
         </View>
         <Divider
           style={{
@@ -126,19 +150,21 @@ export default function HomeScreen() {
             flexDirection: "column",
             justifyContent: "space-between",
             alignItems: "center",
+            flexBasis: "30%",
           }}
         >
           <ThemedText style={{ fontWeight: "bold" }}>
             {user?.following}
           </ThemedText>
-          <ThemedText style={{ fontWeight: "bold" }}>Following</ThemedText>
+          <ThemedText style={{ fontWeight: "bold" }}>Seguindo</ThemedText>
         </View>
       </View>
-      <View>
+
+      <View style={{ paddingBottom: 50 }}>
         <View
           style={{
             flexDirection: "row",
-            marginVertical: 40,
+            marginTop: 30,
             justifyContent: "space-between",
             alignItems: "center",
           }}
@@ -154,12 +180,12 @@ export default function HomeScreen() {
             style={{
               fontWeight: "bold",
               fontSize: 26,
+              paddingTop: 10,
               textAlign: "center",
               flexBasis: "40%",
-              marginTop: 20,
             }}
           >
-            Repositorys
+            Repositórios
           </ThemedText>
           <Divider
             style={{
@@ -169,26 +195,196 @@ export default function HomeScreen() {
             }}
           />
         </View>
-        <View style={{ paddingHorizontal: 20, gap: 12 }}>
-          {repos.map((repo) => (
-            <View
-              key={repo.name}
-              style={{
-                width: "100%",
-                marginVertical: 10,
-              }}
-            >
-              <Link href={repo.url} target="_blank">
-                <ThemedText style={{ fontWeight: "bold" }}>
-                  {repo.name}
-                </ThemedText>
-              </Link>
-              <ThemedText>{repo.description}</ThemedText>
-              <ThemedText>{repo.languages}</ThemedText>
-            </View>
-          ))}
+        <View
+          style={{
+            paddingHorizontal: 20,
+          }}
+        >
+          <FlatList
+            data={repos}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(item) => item.name}
+            style={{ marginBottom: -55 }}
+            onEndReachedThreshold={0.1}
+            onEndReached={handleLoadMore}
+            ListFooterComponent={
+              loading ? <ActivityIndicator size="large" /> : null
+            }
+            renderItem={({ item }) => (
+              <View
+                key={item.name}
+                style={{
+                  width: "100%",
+                  marginVertical: 10,
+                  borderWidth: 1,
+                  borderColor: Colors[colorScheme!].text,
+                  borderRadius: 10,
+                  gap: 12,
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    width: "100%",
+                    paddingVertical: 20,
+                    borderBottomWidth: 1,
+                    borderBottomLeftRadius: 10,
+                    borderColor: Colors[colorScheme!].text,
+                    borderRadius: 10,
+                    backgroundColor: darken(
+                      0.1,
+                      Colors[colorScheme!].background
+                    ),
+                  }}
+                >
+                  <Icon
+                    name="github"
+                    type="font-awesome"
+                    size={70}
+                    color={Colors[colorScheme!].text}
+                  />
+                </View>
+
+                <View style={{ gap: 12, alignItems: "center" }}>
+                  {/* NOME DO REPOSITORIO  */}
+                  <TouchableOpacity
+                    onPress={() => Linking.openURL(item.url)}
+                    style={[
+                      styles.WrapperLeftTable,
+                      { borderBottomColor: Colors[colorScheme!].text },
+                    ]}
+                  >
+                    <View
+                      style={[
+                        styles.LeftTable,
+                        { borderRightColor: Colors[colorScheme!].text },
+                      ]}
+                    >
+                      <Icon
+                        name="pencil"
+                        type="font-awesome"
+                        size={20}
+                        color={Colors[colorScheme!].text}
+                      />
+                      <ThemedText style={styles.LeftTableText}>Nome</ThemedText>
+                    </View>
+                    <ThemedText
+                      style={[
+                        styles.RightTableText,
+                        { borderLeftColor: Colors[colorScheme!].text },
+                      ]}
+                    >
+                      {item.name}
+                    </ThemedText>
+                  </TouchableOpacity>
+
+                  {/* DESCRIÇÃO DO REPOSITORIO  */}
+                  <View
+                    style={[
+                      styles.WrapperLeftTable,
+                      { borderBottomColor: Colors[colorScheme!].text },
+                    ]}
+                  >
+                    <View
+                      style={[
+                        styles.LeftTable,
+                        { borderRightColor: Colors[colorScheme!].text },
+                      ]}
+                    >
+                      <Icon
+                        name="info-circle"
+                        type="font-awesome"
+                        size={20}
+                        color={Colors[colorScheme!].text}
+                      />
+                      <ThemedText style={styles.LeftTableText}>
+                        Descrição
+                      </ThemedText>
+                    </View>
+
+                    <ThemedText
+                      style={[
+                        styles.RightTableText,
+                        { borderLeftColor: Colors[colorScheme!].text },
+                      ]}
+                    >
+                      {item.description}
+                    </ThemedText>
+                  </View>
+
+                  {/* TECNOLOGIAS DO REPOSITORIO  */}
+                  <View
+                    style={[
+                      styles.WrapperLeftTable,
+                      { borderBottomColor: Colors[colorScheme!].text },
+                    ]}
+                  >
+                    <View
+                      style={[
+                        styles.LeftTable,
+                        { borderRightColor: Colors[colorScheme!].text },
+                      ]}
+                    >
+                      {colorScheme === "dark" ? (
+                        <Image
+                          source={require("@/assets/images/processadorWhite.png")}
+                          style={{ width: 24, height: 24 }}
+                        />
+                      ) : (
+                        <Image
+                          source={require("@/assets/images/processadorBlack.png")}
+                          style={{ width: 24, height: 24 }}
+                        />
+                      )}
+                      <ThemedText style={styles.LeftTableText}>
+                        Tecnologias
+                      </ThemedText>
+                    </View>
+
+                    <ThemedText
+                      style={[
+                        styles.RightTableText,
+                        { borderLeftColor: Colors[colorScheme!].text },
+                      ]}
+                    >
+                      {item.languages}
+                    </ThemedText>
+                  </View>
+                </View>
+              </View>
+            )}
+          />
         </View>
       </View>
-    </ScrollView>
+    </View>
   );
 }
+const styles = StyleSheet.create({
+  WrapperLeftTable: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: "100%",
+    borderBottomWidth: 0.5,
+  },
+  LeftTable: {
+    flexDirection: "column",
+    flexBasis: "26%",
+    alignItems: "center",
+    justifyContent: "space-evenly",
+  },
+  LeftTableText: {
+    fontWeight: "500",
+    alignItems: "center",
+    fontSize: 14,
+  },
+  RightTableText: {
+    fontWeight: "500",
+    fontSize: 14,
+    flexBasis: "70%",
+    textAlign: "left",
+    borderLeftWidth: 0.5,
+    padding: 10,
+    height: "100%",
+    marginBottom: 8,
+  },
+});

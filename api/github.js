@@ -29,20 +29,23 @@ async function time() {
   });
   const data = await response.json();
 }
-async function getRepos() {
-  const response = await fetch(URL + "/repos?sort=updated&direction=desc", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+async function getRepos(page: number) {
+  const response = await fetch(
+    URL + `/repos?per_page=5&page=${page}&sort=updated&direction=desc`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
   const data = await response.json();
   return data.map((repo) => {
     return {
       name: repo.name,
       description: repo.description,
       url: repo.html_url,
-      languages: repo.languages,
+      languages: repo.language,
     };
   });
 }
