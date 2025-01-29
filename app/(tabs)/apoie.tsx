@@ -1,10 +1,22 @@
-import { View, Button, Alert, TextInput, useColorScheme } from "react-native";
+import {
+  View,
+  Button,
+  Alert,
+  TextInput,
+  useColorScheme,
+  ImageBackground,
+} from "react-native";
 import { useState, useCallback } from "react";
 import { ThemedText } from "@/components/ThemedText";
 import { useStripe } from "@stripe/stripe-react-native";
 import { fetchPaymentSheetParams } from "@/api/api";
 import Sliders from "@/components/ui/slider";
 import { Colors } from "@/constants/Colors";
+import { LogBox } from "react-native";
+
+LogBox.ignoreLogs([
+  "Warning: Slider: Support for defaultProps will be removed from function components in a future major release.",
+]);
 
 export default function ApoieScreen() {
   const colorScheme = useColorScheme();
@@ -62,7 +74,10 @@ export default function ApoieScreen() {
   };
 
   return (
-    <View
+    <ImageBackground
+      source={require("@/assets/images/bg-2.jpg")}
+      resizeMode="cover"
+      imageStyle={{ opacity: colorScheme === "dark" ? 0.1 : 0.5 }}
       style={{
         flex: 1,
         justifyContent: "center",
@@ -71,7 +86,12 @@ export default function ApoieScreen() {
       }}
     >
       <ThemedText
-        style={{ fontSize: 24, textAlign: "center", fontWeight: "semibold" }}
+        style={{
+          fontSize: 24,
+          textAlign: "center",
+          fontWeight: "bold",
+          marginBottom: 12,
+        }}
       >
         Contribuir
       </ThemedText>
@@ -118,6 +138,6 @@ export default function ApoieScreen() {
         </ThemedText>
         <Button disabled={loading} title="Cartão" onPress={openPaymentSheet} />
       </View>
-    </View>
+    </ImageBackground>
   );
 }

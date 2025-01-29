@@ -1,10 +1,8 @@
 import {
   ActivityIndicator,
-  Button,
   FlatList,
   Image,
   Linking,
-  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -13,7 +11,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { Avatar, Divider, Icon } from "@rneui/themed";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "react-native";
-import { getRepos, getUserData } from "@/api/github";
+import { getRepos, getUserData, time } from "@/api/github";
 import { useEffect, useState } from "react";
 import { darken } from "polished";
 
@@ -50,7 +48,6 @@ export default function HomeScreen() {
 
     fetchData();
   }, []);
-
   const handleLoadMore = async () => {
     if (loading) return;
     setLoading(true);
@@ -64,20 +61,20 @@ export default function HomeScreen() {
     <View
       style={{
         flex: 1,
-        paddingTop: 50,
-        paddingBottom: 490,
+        paddingTop: 40,
+        paddingBottom: 510,
         backgroundColor: Colors[colorScheme ?? "light"].background,
       }}
     >
       <View
         style={{
           alignItems: "center",
-          gap: 16,
-          marginBottom: 30,
+          gap: 14,
+          marginBottom: 20,
         }}
       >
         <Avatar
-          size={100}
+          size={90}
           rounded
           source={{ uri: "https://github.com/AllyssonCidade.png" }}
           title="Allysson Cidade"
@@ -160,7 +157,7 @@ export default function HomeScreen() {
         </View>
       </View>
 
-      <View style={{ paddingBottom: 50 }}>
+      <View style={{ paddingBottom: 0 }}>
         <View
           style={{
             flexDirection: "row",

@@ -37,6 +37,7 @@ export default function TabLayout() {
         name="apoie"
         options={{
           title: "Apoie",
+
           tabBarIcon: ({ color }) => (
             <Icon size={28} name="heart" color={color} type="font-awesome" />
           ),

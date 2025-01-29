@@ -28,6 +28,7 @@ async function time() {
     },
   });
   const data = await response.json();
+  console.log(data);
 }
 async function getRepos(page: number) {
   const response = await fetch(
