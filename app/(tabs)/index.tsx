@@ -1,6 +1,5 @@
 import {
-  ActivityIndicator,
-  FlatList,
+  ScrollView,
   Image,
   Linking,
   StyleSheet,
@@ -14,6 +13,7 @@ import { useColorScheme } from "react-native";
 import { getRepos, getUserData, time } from "@/api/github";
 import { useEffect, useState } from "react";
 import { darken } from "polished";
+import { Button } from "@rneui/base";
 
 export interface RepoTypes {
   name: string;
@@ -58,11 +58,10 @@ export default function HomeScreen() {
   };
 
   return (
-    <View
+    <ScrollView
       style={{
         flex: 1,
-        paddingTop: 40,
-        paddingBottom: 510,
+        paddingTop: 50,
         backgroundColor: Colors[colorScheme ?? "light"].background,
       }}
     >
@@ -157,7 +156,7 @@ export default function HomeScreen() {
         </View>
       </View>
 
-      <View style={{ paddingBottom: 0 }}>
+      <View style={{ paddingBottom: 50 }}>
         <View
           style={{
             flexDirection: "row",
@@ -197,163 +196,150 @@ export default function HomeScreen() {
             paddingHorizontal: 20,
           }}
         >
-          <FlatList
-            data={repos}
-            showsVerticalScrollIndicator={false}
-            keyExtractor={(item) => item.name}
-            style={{ marginBottom: -55 }}
-            onEndReachedThreshold={0.1}
-            onEndReached={handleLoadMore}
-            ListFooterComponent={
-              loading ? <ActivityIndicator size="large" /> : null
-            }
-            renderItem={({ item }) => (
+          {repos.map((repo) => (
+            <View
+              key={repo.name}
+              style={{
+                width: "100%",
+                marginVertical: 10,
+                borderWidth: 1,
+                borderColor: Colors[colorScheme!].text,
+                borderRadius: 10,
+                gap: 12,
+                alignItems: "center",
+              }}
+            >
               <View
-                key={item.name}
                 style={{
                   width: "100%",
-                  marginVertical: 10,
-                  borderWidth: 1,
+                  paddingVertical: 20,
+                  borderBottomWidth: 1,
+                  borderBottomLeftRadius: 10,
                   borderColor: Colors[colorScheme!].text,
                   borderRadius: 10,
-                  gap: 12,
-                  alignItems: "center",
+                  backgroundColor: darken(0.1, Colors[colorScheme!].background),
                 }}
               >
-                <View
-                  style={{
-                    width: "100%",
-                    paddingVertical: 20,
-                    borderBottomWidth: 1,
-                    borderBottomLeftRadius: 10,
-                    borderColor: Colors[colorScheme!].text,
-                    borderRadius: 10,
-                    backgroundColor: darken(
-                      0.1,
-                      Colors[colorScheme!].background
-                    ),
-                  }}
+                <Icon
+                  name="github"
+                  type="font-awesome"
+                  size={70}
+                  color={Colors[colorScheme!].text}
+                />
+              </View>
+
+              <View style={{ gap: 12, alignItems: "center" }}>
+                {/* NOME DO REPOSITORIO  */}
+                <TouchableOpacity
+                  onPress={() => Linking.openURL(repo.url)}
+                  style={[
+                    styles.WrapperLeftTable,
+                    { borderBottomColor: Colors[colorScheme!].text },
+                  ]}
                 >
-                  <Icon
-                    name="github"
-                    type="font-awesome"
-                    size={70}
-                    color={Colors[colorScheme!].text}
-                  />
+                  <View
+                    style={[
+                      styles.LeftTable,
+                      { borderRightColor: Colors[colorScheme!].text },
+                    ]}
+                  >
+                    <Icon
+                      name="pencil"
+                      type="font-awesome"
+                      size={20}
+                      color={Colors[colorScheme!].text}
+                    />
+                    <ThemedText style={styles.LeftTableText}>Nome</ThemedText>
+                  </View>
+                  <ThemedText
+                    style={[
+                      styles.RightTableText,
+                      { borderLeftColor: Colors[colorScheme!].text },
+                    ]}
+                  >
+                    {repo.name}
+                  </ThemedText>
+                </TouchableOpacity>
+
+                {/* DESCRIÇÃO DO REPOSITORIO  */}
+                <View
+                  style={[
+                    styles.WrapperLeftTable,
+                    { borderBottomColor: Colors[colorScheme!].text },
+                  ]}
+                >
+                  <View
+                    style={[
+                      styles.LeftTable,
+                      { borderRightColor: Colors[colorScheme!].text },
+                    ]}
+                  >
+                    <Icon
+                      name="info-circle"
+                      type="font-awesome"
+                      size={20}
+                      color={Colors[colorScheme!].text}
+                    />
+                    <ThemedText style={styles.LeftTableText}>
+                      Descrição
+                    </ThemedText>
+                  </View>
+
+                  <ThemedText
+                    style={[
+                      styles.RightTableText,
+                      { borderLeftColor: Colors[colorScheme!].text },
+                    ]}
+                  >
+                    {repo.description}
+                  </ThemedText>
                 </View>
 
-                <View style={{ gap: 12, alignItems: "center" }}>
-                  {/* NOME DO REPOSITORIO  */}
-                  <TouchableOpacity
-                    onPress={() => Linking.openURL(item.url)}
-                    style={[
-                      styles.WrapperLeftTable,
-                      { borderBottomColor: Colors[colorScheme!].text },
-                    ]}
-                  >
-                    <View
-                      style={[
-                        styles.LeftTable,
-                        { borderRightColor: Colors[colorScheme!].text },
-                      ]}
-                    >
-                      <Icon
-                        name="pencil"
-                        type="font-awesome"
-                        size={20}
-                        color={Colors[colorScheme!].text}
-                      />
-                      <ThemedText style={styles.LeftTableText}>Nome</ThemedText>
-                    </View>
-                    <ThemedText
-                      style={[
-                        styles.RightTableText,
-                        { borderLeftColor: Colors[colorScheme!].text },
-                      ]}
-                    >
-                      {item.name}
-                    </ThemedText>
-                  </TouchableOpacity>
-
-                  {/* DESCRIÇÃO DO REPOSITORIO  */}
+                {/* TECNOLOGIAS DO REPOSITORIO  */}
+                <View
+                  style={[
+                    styles.WrapperLeftTable,
+                    { borderBottomColor: Colors[colorScheme!].text },
+                  ]}
+                >
                   <View
                     style={[
-                      styles.WrapperLeftTable,
-                      { borderBottomColor: Colors[colorScheme!].text },
+                      styles.LeftTable,
+                      { borderRightColor: Colors[colorScheme!].text },
                     ]}
                   >
-                    <View
-                      style={[
-                        styles.LeftTable,
-                        { borderRightColor: Colors[colorScheme!].text },
-                      ]}
-                    >
-                      <Icon
-                        name="info-circle"
-                        type="font-awesome"
-                        size={20}
-                        color={Colors[colorScheme!].text}
+                    {colorScheme === "dark" ? (
+                      <Image
+                        source={require("@/assets/images/processadorWhite.png")}
+                        style={{ width: 24, height: 24 }}
                       />
-                      <ThemedText style={styles.LeftTableText}>
-                        Descrição
-                      </ThemedText>
-                    </View>
-
-                    <ThemedText
-                      style={[
-                        styles.RightTableText,
-                        { borderLeftColor: Colors[colorScheme!].text },
-                      ]}
-                    >
-                      {item.description}
+                    ) : (
+                      <Image
+                        source={require("@/assets/images/processadorBlack.png")}
+                        style={{ width: 24, height: 24 }}
+                      />
+                    )}
+                    <ThemedText style={styles.LeftTableText}>
+                      Tecnologias
                     </ThemedText>
                   </View>
 
-                  {/* TECNOLOGIAS DO REPOSITORIO  */}
-                  <View
+                  <ThemedText
                     style={[
-                      styles.WrapperLeftTable,
-                      { borderBottomColor: Colors[colorScheme!].text },
+                      styles.RightTableText,
+                      { borderLeftColor: Colors[colorScheme!].text },
                     ]}
                   >
-                    <View
-                      style={[
-                        styles.LeftTable,
-                        { borderRightColor: Colors[colorScheme!].text },
-                      ]}
-                    >
-                      {colorScheme === "dark" ? (
-                        <Image
-                          source={require("@/assets/images/processadorWhite.png")}
-                          style={{ width: 24, height: 24 }}
-                        />
-                      ) : (
-                        <Image
-                          source={require("@/assets/images/processadorBlack.png")}
-                          style={{ width: 24, height: 24 }}
-                        />
-                      )}
-                      <ThemedText style={styles.LeftTableText}>
-                        Tecnologias
-                      </ThemedText>
-                    </View>
-
-                    <ThemedText
-                      style={[
-                        styles.RightTableText,
-                        { borderLeftColor: Colors[colorScheme!].text },
-                      ]}
-                    >
-                      {item.languages}
-                    </ThemedText>
-                  </View>
+                    {repo.languages}
+                  </ThemedText>
                 </View>
               </View>
-            )}
-          />
+            </View>
+          ))}
+          <Button title="Ver mais" type="clear" onPress={handleLoadMore} />
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 const styles = StyleSheet.create({
