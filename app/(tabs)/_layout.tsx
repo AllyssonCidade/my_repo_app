@@ -7,6 +7,7 @@ import TabBarBackground from "@/components/ui/TabBarBackground";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { Icon } from "@rneui/base";
+import { EvilIcons } from "@expo/vector-icons";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -30,6 +31,15 @@ export default function TabLayout() {
           title: "Home",
           tabBarIcon: ({ color }) => (
             <IconSymbol size={28} name="house.fill" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="curriculo"
+        options={{
+          title: "Curriculo",
+          tabBarIcon: ({ color }) => (
+            <EvilIcons name="external-link" size={28} color={color} />
           ),
         }}
       />

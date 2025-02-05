@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "donate4me",
-    "slug": "donate4me",
+    "name": "my_App",
+    "slug": "my_App",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "donate4me",
+    "scheme": "my_App",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -13,9 +13,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/bgg.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.assinappdevs.donate4me"
     },
     "web": {
       "bundler": "metro",

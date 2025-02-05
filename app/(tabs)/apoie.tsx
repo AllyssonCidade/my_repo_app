@@ -64,6 +64,7 @@ export default function ApoieScreen() {
 
     if (error) {
       Alert.alert(`Error code: ${error.code}`, error.message);
+      setLoading(false);
     } else {
       Alert.alert("Success", "Your order is confirmed!");
       setLoading(false);
@@ -75,9 +76,9 @@ export default function ApoieScreen() {
 
   return (
     <ImageBackground
-      source={require("@/assets/images/bg-2.jpg")}
+      source={require("@/assets/images/f.jpg")}
       resizeMode="cover"
-      imageStyle={{ opacity: colorScheme === "dark" ? 0.1 : 0.5 }}
+      imageStyle={{ opacity: colorScheme === "dark" ? 0.3 : 0.5 }}
       style={{
         flex: 1,
         justifyContent: "center",
