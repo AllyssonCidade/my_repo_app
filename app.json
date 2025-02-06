@@ -4,7 +4,7 @@
     "slug": "my_App",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/bgg.png",
+    "icon": "./assets/images/bg.png",
     "scheme": "my_App",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -13,7 +13,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/bgg.png",
+        "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.assinappdevs.donate4me"
@@ -37,6 +37,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "f33b228f-a5a5-472d-a2e1-df5716ddd430"
+      }
     }
   }
 }
