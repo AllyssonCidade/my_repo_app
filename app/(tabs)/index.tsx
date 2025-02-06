@@ -122,6 +122,7 @@ export default function HomeScreen() {
           <Divider
             style={{
               width: 0.3,
+
               backgroundColor: Colors[colorScheme!].text,
               height: "100%",
             }}
@@ -143,6 +144,7 @@ export default function HomeScreen() {
           <Divider
             style={{
               width: 0.3,
+
               backgroundColor: Colors[colorScheme!].text,
               height: "100%",
             }}
@@ -257,7 +259,7 @@ export default function HomeScreen() {
                         name="pencil"
                         type="font-awesome"
                         size={20}
-                        color={Colors[colorScheme!].text}
+                        color="{Colors[colorScheme!].text}"
                       />
                       <ThemedText style={styles.LeftTableText}>Nome</ThemedText>
                     </View>

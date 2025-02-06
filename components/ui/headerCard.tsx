@@ -1,11 +1,18 @@
 import React, { useState } from "react";
-import { Image, Linking, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  Linking,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from "react-native";
 
 import { ThemedText } from "../ThemedText";
 import { EvilIcons, Ionicons } from "@expo/vector-icons";
 
 import BlinkingButton from "./blinkingButton";
 import Handle from "./handle";
+import { Colors } from "@/constants/Colors";
 
 export default function HeaderCard() {
   const [expanded, setExpanded] = useState(false);
@@ -15,7 +22,7 @@ export default function HeaderCard() {
       "https://docs.google.com/document/d/1nNf4ffBw39NJGoYGS7QcVrYKA-i2A9mm6ot22Gjb4iI/export?format=pdf";
     Linking.openURL(url);
   };
-
+  const color = Colors[useColorScheme() ?? "light"].text;
   return (
     <View
       style={{
@@ -72,20 +79,26 @@ export default function HeaderCard() {
           onPress={handleDownload}
           children={"Baixar Currículo"}
         />
+        <Handle
+          style={{
+            position: "relative",
+            right: 50,
+            top: -20,
+          }}
+        />
       </View>
 
-      <Handle />
       <TouchableOpacity onPress={() => setExpanded(!expanded)}>
         <EvilIcons
           style={{
             alignSelf: "center",
-            marginBottom: expanded ? -15 : -20,
+            marginBottom: expanded ? -15 : -25,
             borderBottomRightRadius: 20,
             borderColor: "transparent",
             borderRadius: 50,
             paddingHorizontal: 4,
           }}
-          color="#6ca1e6"
+          color={Colors[useColorScheme() ?? "light"].text}
           name={expanded ? "chevron-up" : "chevron-down"}
           size={40}
         />
@@ -95,7 +108,7 @@ export default function HeaderCard() {
         <View
           style={{
             marginTop: 10,
-            borderTopColor: "#6ca1e6",
+            borderTopColor: color,
             borderTopWidth: 1,
             flexDirection: "column",
             paddingBottom: 10,
