@@ -43,16 +43,6 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
-        name="apoie"
-        options={{
-          title: "Apoie",
-
-          tabBarIcon: ({ color }) => (
-            <Icon size={28} name="heart" color={color} type="font-awesome" />
-          ),
-        }}
-      />
     </Tabs>
   );
 }
