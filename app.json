@@ -4,7 +4,7 @@
     "slug": "my_App",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/bgg.png",
     "scheme": "my_App",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
