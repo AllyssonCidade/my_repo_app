@@ -13,7 +13,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/icon.png",
+        "foregroundImage": "./assets/images/bg.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.assinappdevs.donate4me"
@@ -43,8 +43,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "f33b228f-a5a5-472d-a2e1-df5716ddd430"
+        "projectId": "03a995f8-790c-4fef-bd18-e5d857f0265b"
       }
-    }
+    },
+    "owner": "allyss0n"
   }
 }
