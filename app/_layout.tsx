@@ -11,7 +11,6 @@ import { useEffect } from "react";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
-import ComponentStripeProvider from "@/providers/stripe-provider";
 import { Colors } from "@/constants/Colors";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -34,17 +33,15 @@ export default function RootLayout() {
   }
 
   return (
-    <ComponentStripeProvider>
-      <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-        <StatusBar
-          style="auto"
-          backgroundColor={Colors[colorScheme ?? "light"].background}
-        />
-      </ThemeProvider>
-    </ComponentStripeProvider>
+    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="+not-found" />
+      </Stack>
+      <StatusBar
+        style="auto"
+        backgroundColor={Colors[colorScheme ?? "light"].background}
+      />
+    </ThemeProvider>
   );
 }

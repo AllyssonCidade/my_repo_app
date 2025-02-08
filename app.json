@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "my_App",
-    "slug": "my_App",
+    "name": "allysson",
+    "slug": "allysson",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/bg.png",
-    "scheme": "my_App",
+    "scheme": "allysson",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
