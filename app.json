@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/bg.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.assinappdevs.donate4me"
+      "package": "com.assinappdevs.donate4me",
+      "versionCode": 2
     },
     "web": {
       "bundler": "metro",
