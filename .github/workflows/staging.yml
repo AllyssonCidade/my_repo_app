@@ -1,11 +1,11 @@
-name: Build For Staging
+name: Build and Submit for Staging
 on:
   push:
     branches:
       - staging
 jobs:
   build:
-    name: Build For Staging
+    name: Build for Staging
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -13,11 +13,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16.x'
+          node-version: "16.x"
       - name: Install Dependencies
         run: npm install
-      - name: Build and Submit
-        run: |
-          echo "Building and submitting staging build..."
-          npx expo build:android --distribution internal
-          npx expo build:ios --distribution internal
+      - name: EAS Build
+        run: npx eas build --profile preview4 --platform all --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      - name: EAS Submit
+        run: npx eas submit --platform all --profile staging --non-interactive
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
