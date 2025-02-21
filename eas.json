@@ -17,5 +17,18 @@
       "distribution": "internal"
     },
     "production": {}
+  },
+  "submit": {
+    "staging": {
+      "android": {
+        "serviceAccountKeyPath": "./path/to/google-services.json",
+        "track": "internal"
+      },
+      "ios": {
+        "appleId": "seu-apple-id",
+        "ascAppId": "seu-asc-app-id",
+        "appleTeamId": "seu-apple-team-id"
+      }
+    }
   }
 }

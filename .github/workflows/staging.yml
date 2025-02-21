@@ -16,6 +16,8 @@ jobs:
           node-version: "16.x"
       - name: Install Dependencies
         run: npm install
+      - name: Install EAS CLI
+        run: npm install -g eas-cli
       - name: EAS Build
         run: npx eas build --profile preview4 --platform all --non-interactive
         env:
