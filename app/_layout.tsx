@@ -7,11 +7,13 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { useEffect } from "react";
+import * as SystemUI from "expo-system-ui";
+import { useEffect, useMemo } from "react";
 import "react-native-reanimated";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { Colors } from "@/constants/Colors";
+import { useColorScheme } from "@/hooks/useColorScheme";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -21,6 +23,10 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
+  const theme = useMemo(
+    () => Colors[colorScheme ?? "light"],
+    [colorScheme]
+  );
 
   useEffect(() => {
     if (loaded) {
@@ -28,20 +34,29 @@ export default function RootLayout() {
     }
   }, [loaded]);
 
+  useEffect(() => {
+    SystemUI.setBackgroundColorAsync(theme.background);
+  }, [theme.background]);
+
   if (!loaded) {
     return null;
   }
 
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar
-        style="auto"
-        backgroundColor={Colors[colorScheme ?? "light"].background}
-      />
-    </ThemeProvider>
+    <SafeAreaProvider>
+      <ThemeProvider
+        value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+      >
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <StatusBar
+          style={colorScheme === "dark" ? "light" : "dark"}
+          backgroundColor="transparent"
+          translucent
+        />
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }

@@ -1,13 +1,39 @@
-import { Button } from "@rneui/themed";
 import React, { useState } from "react";
 import { ThemedText } from "../ThemedText";
 import * as Progress from "react-native-progress";
 
-import { Image, useColorScheme, View } from "react-native";
+import { Image, TouchableOpacity, useColorScheme, View } from "react-native";
+import { Colors } from "@/constants/Colors";
 
 export default function Skills() {
   const colorScheme = useColorScheme();
+  const palette = Colors[colorScheme ?? "light"];
   const [expandedTools, setExpandedTools] = useState(false);
+
+  const ToggleButton = ({
+    label,
+    onPress,
+  }: {
+    label: string;
+    onPress: () => void;
+  }) => (
+    <TouchableOpacity
+      onPress={onPress}
+      style={{
+        paddingVertical: 8,
+        alignSelf: "flex-start",
+      }}
+    >
+      <ThemedText
+        style={{
+          color: palette.tint,
+          fontWeight: "700",
+        }}
+      >
+        {label}
+      </ThemedText>
+    </TouchableOpacity>
+  );
   return (
     <View style={{ flexDirection: "column", gap: 20 }}>
       <View
@@ -65,10 +91,9 @@ export default function Skills() {
           <Progress.Bar progress={0.6} width={300} />
         </View>
         {!expandedTools ? (
-          <Button
-            title="Ver mais"
-            color="transparent"
-            onPress={() => setExpandedTools(!expandedTools)}
+          <ToggleButton
+            label="Ver mais"
+            onPress={() => setExpandedTools(true)}
           />
         ) : null}
         {expandedTools && (
@@ -163,10 +188,9 @@ export default function Skills() {
               </ThemedText>
               <Progress.Bar progress={0.7} width={300} />
             </View>
-            <Button
-              title="Ver menos"
-              color="transparent"
-              onPress={() => setExpandedTools(!expandedTools)}
+            <ToggleButton
+              label="Ver menos"
+              onPress={() => setExpandedTools(false)}
             />
           </View>
         )}

@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { Slider, Icon } from "@rneui/themed";
+import Slider from "@react-native-community/slider";
 
 type SlidersComponentProps = {
   value: number;
@@ -25,32 +25,18 @@ const Sliders: React.FunctionComponent<SlidersComponentProps> = ({
   };
 
   return (
-    <>
-      <View style={[styles.contentView]}>
-        <Slider
-          value={value}
-          onValueChange={onVChange}
-          maximumValue={100}
-          minimumValue={1}
-          step={1}
-          allowTouchTrack
-          trackStyle={{ height: 5, backgroundColor: "transparent" }}
-          thumbStyle={{ height: 20, width: 20, backgroundColor: "transparent" }}
-          thumbProps={{
-            children: (
-              <Icon
-                name="money"
-                type="font-awesome"
-                size={20}
-                reverse
-                containerStyle={{ bottom: 20, right: 20 }}
-                color={color()}
-              />
-            ),
-          }}
-        />
-      </View>
-    </>
+    <View style={styles.contentView}>
+      <Slider
+        value={value}
+        onValueChange={onVChange}
+        maximumValue={100}
+        minimumValue={1}
+        step={1}
+        minimumTrackTintColor={color()}
+        maximumTrackTintColor="rgba(255,255,255,0.2)"
+        thumbTintColor={color()}
+      />
+    </View>
   );
 };
 

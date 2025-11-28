@@ -74,11 +74,9 @@ export default function HeaderCard() {
             size={40}
           />
         </View>
-        <BlinkingButton
-          iconName="download"
-          onPress={handleDownload}
-          children={"Baixar Currículo"}
-        />
+        <BlinkingButton iconName="download" onPress={handleDownload}>
+          {"Baixar Currículo"}
+        </BlinkingButton>
         <Handle
           style={{
             position: "relative",

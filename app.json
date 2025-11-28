@@ -3,11 +3,21 @@
     "name": "allysson",
     "slug": "allysson",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/images/bg.png",
     "scheme": "allysson",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "androidStatusBar": {
+      "backgroundColor": "#0b0b0f",
+      "barStyle": "light-content",
+      "translucent": true
+    },
+    "androidNavigationBar": {
+      "backgroundColor": "#00000000",
+      "barStyle": "dark-content",
+      "visible": "immersive"
+    },
     "ios": {
       "supportsTablet": true
     },
@@ -31,9 +41,21 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "backgroundColor": "#0b0b0f"
         }
-      ]
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35,
+            "buildToolsVersion": "35.0.0",
+            "ndkVersion": "26.3.11579264"
+          }
+        }
+      ],
+      "./plugins/withEdgeToEdge"
     ],
     "experiments": {
       "typedRoutes": true

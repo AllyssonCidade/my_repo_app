@@ -1,13 +1,11 @@
-import { time } from "@/api/github";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
-  withSequence,
   withTiming,
 } from "react-native-reanimated";
 
@@ -21,7 +19,7 @@ export default function Handle({ style }: { style?: any }) {
       return () => {
         scale.value = 1;
       };
-    }, [])
+    }, [scale])
   );
 
   const animatedStyle = useAnimatedStyle(() => ({

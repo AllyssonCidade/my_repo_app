@@ -12,7 +12,7 @@ import Animated, {
   withRepeat,
   withTiming,
 } from "react-native-reanimated";
-import { Colors } from "react-native/Libraries/NewAppScreen";
+import { Colors } from "@/constants/Colors";
 
 const BlinkingButton = ({
   children,
@@ -25,27 +25,26 @@ const BlinkingButton = ({
 }) => {
   const opacity = useSharedValue(1);
   const colorScheme = useColorScheme();
+  const palette = Colors[colorScheme ?? "light"];
 
   useEffect(() => {
     opacity.value = withRepeat(withTiming(0.2, { duration: 2000 }), -1, true);
-  }, []);
-  9;
+  }, [opacity]);
+
   const animatedStyle = useAnimatedStyle(() => ({
     opacity: opacity.value,
   }));
 
   return (
-    <TouchableOpacity style={styles.button}>
+    <TouchableOpacity style={styles.button} onPress={onPress}>
       <Animated.View style={[styles.innerButton, animatedStyle]}>
         <MaterialCommunityIcons
           style={{ marginRight: 10 }}
           name={iconName}
           size={20}
-          color={Colors[colorScheme!].text}
+          color={palette.text}
         />
-        <Text style={styles.text} onPress={onPress}>
-          {children}
-        </Text>
+        <Text style={styles.text}>{children}</Text>
       </Animated.View>
     </TouchableOpacity>
   );
