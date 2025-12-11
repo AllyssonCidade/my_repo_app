@@ -1,5 +1,24 @@
+import { GITHUB_TOKEN } from "@env";
+
 const username = "AllyssonCidade";
 const URL = `https://api.github.com/users/${username}`;
+
+const defaultHeaders: Record<string, string> = {
+  "Content-Type": "application/json",
+};
+
+const authHeaders: Record<string, string> =
+  GITHUB_TOKEN && GITHUB_TOKEN.trim().length > 0
+    ? {
+        Authorization: `Bearer ${GITHUB_TOKEN.trim()}`,
+        "User-Agent": "allysson-portfolio-app",
+      }
+    : {};
+
+const buildHeaders = () => ({
+  ...defaultHeaders,
+  ...authHeaders,
+});
 
 type GithubRepoResponse = {
   name: string;
@@ -37,17 +56,17 @@ const FALLBACK_USER: GithubUserResponse = {
   name: "Allysson Cidade",
   url: "https://github.com/AllyssonCidade",
   bio: "Desenvolvedor Mobile com foco em React Native, Kotlin e integrações para terminais POS.",
-  public_repos: 42,
-  followers: 1200,
-  following: 180,
+  public_repos: 69,
+  followers: 16,
+  following: 15,
 };
 
 const FALLBACK_REPOS: RepoSummary[] = [
   {
-    name: "inter-clone-app",
+    name: "my_repo_app",
     description:
-      "Experiência mobile inspirada no Banco Inter com React Native + Expo Router.",
-    url: "https://github.com/AllyssonCidade/inter-clone-app",
+      "Meu portfólio pessoal com React Native. Disponível para download no Google Play Store.",
+    url: "https://github.com/AllyssonCidade/my_repo_app",
     languages: ["React Native", "TypeScript"],
     stars: 58,
     forks: 6,
@@ -56,10 +75,10 @@ const FALLBACK_REPOS: RepoSummary[] = [
     pushedAt: new Date().toISOString(),
   },
   {
-    name: "pos-pay-sdk",
-    description: "SDK para integração de terminais Android POS com Flutter/React.",
-    url: "https://github.com/AllyssonCidade/pos-pay-sdk",
-    languages: ["Kotlin", "TypeScript"],
+    name: "GithubSearch",
+    description: "um App Android para compartilhar portfolio de projetos do github.",
+    url: "https://github.com/AllyssonCidade/GithubSearch",
+    languages: ["Kotlin"],
     stars: 73,
     forks: 11,
     watchers: 20,
@@ -83,9 +102,7 @@ async function getUserData() {
   try {
     const response = await fetch(URL, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: buildHeaders(),
     });
 
     if (!response.ok) {
@@ -112,9 +129,7 @@ async function getLanguages(repoName: string) {
     `https://api.github.com/repos/${username}/${repoName}/languages`,
     {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: buildHeaders(),
     }
   );
 
@@ -132,9 +147,7 @@ async function getRepos(page: number) {
       `${URL}/repos?per_page=5&page=${page}&sort=updated&direction=desc`,
       {
         method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: buildHeaders(),
       }
     );
 
